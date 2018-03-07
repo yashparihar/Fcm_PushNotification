@@ -56,8 +56,8 @@ navigator.serviceWorker.getRegistrations()
             })
             .then(function (token) {
                 console.log(token);
-                 document.getElementById("token").value = token;
-				 document.getElementById("status").value = "success";
+                 document.getElementById("token").innerHTML = token;
+				 document.getElementById("status").innerHTML = "success";
                 //HERE KEY WOULD BE USER ID InSTEAD OF NOTIFICATION_TOKEN
                 if (myStorage.getItem('notification_token') == token ){
                     console.log("similiar token"+myStorage.getItem('notification_token'));
@@ -73,7 +73,7 @@ navigator.serviceWorker.getRegistrations()
 
             })
             .catch(function () {
-				document.getElementById("status").value = "failed";
+				document.getElementById("status").innerHTML = "failed";
                 console.log("error");
             })
 
@@ -113,6 +113,7 @@ function displayConfirmNotification() {
 // - the user clicks on an app notification created by a sevice worker
 //   `messaging.setBackgroundMessageHandler` handler.
 messaging.onMessage(function (payload) {
+	document.getElementById("status").innerHTML = payload;
     console.log("Message received. ", payload);
     displayConfirmNotification();
     // [START_EXCLUDE]

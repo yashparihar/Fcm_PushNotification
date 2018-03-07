@@ -5,6 +5,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker
         .register("./sw.js")
         .then(function (swReg) {
+			document.getElementById("sw").innerHTML = swReg;
             console.log('Service Worker is registered', swReg);
             swRegistration = swReg;
         })
@@ -25,6 +26,7 @@ firebase.initializeApp(config);
 // Retrieve Firebase Messaging object.
 const messaging = firebase.messaging();
 
+document.getElementById("messaging").innerHTML = messaging;
 
 //REGISTER FIREBASE MESSAGING SERVICE WITH EXISTING SERVICE WORKER
 navigator.serviceWorker.getRegistrations()
@@ -113,7 +115,7 @@ function displayConfirmNotification() {
 // - the user clicks on an app notification created by a sevice worker
 //   `messaging.setBackgroundMessageHandler` handler.
 messaging.onMessage(function (payload) {
-	document.getElementById("status").innerHTML = payload;
+	document.getElementById("payload").innerHTML = payload;
     console.log("Message received. ", payload);
     displayConfirmNotification();
     // [START_EXCLUDE]

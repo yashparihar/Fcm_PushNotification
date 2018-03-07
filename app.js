@@ -26,7 +26,7 @@ firebase.initializeApp(config);
 // Retrieve Firebase Messaging object.
 const messaging = firebase.messaging();
 
-document.getElementById("messaging").innerHTML = messaging;
+//document.getElementById("messaging").innerHTML = messaging;
 
 //REGISTER FIREBASE MESSAGING SERVICE WITH EXISTING SERVICE WORKER
 navigator.serviceWorker.getRegistrations()

@@ -60,7 +60,7 @@ navigator.serviceWorker.getRegistrations()
         messaging.requestPermission()  //REQUESTING PERMISSION FOR SENDING NOTIFICATION
             .then(function () {
                 console.log("got permission");
-               // displayConfirmNotification();
+                displayConfirmNotification();
 
                 return messaging.getToken();
             })

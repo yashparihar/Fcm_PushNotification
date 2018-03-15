@@ -91,7 +91,7 @@ navigator.serviceWorker.getRegistrations()
     })
 
 
-function displayConfirmNotification(var fro) {
+function displayConfirmNotification(fro) {
     if ('serviceWorker' in navigator) {
         var options = {
 			title: fro,

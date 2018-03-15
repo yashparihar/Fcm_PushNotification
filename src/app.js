@@ -73,7 +73,7 @@ navigator.serviceWorker.getRegistrations()
                     console.log("similiar token"+myStorage.getItem('notification_token'));
 
                 } else {
-					displayConfirmNotification();
+					displayConfirmNotification("newSubs");
                     console.log("New token");
                     myStorage.setItem('notification_token', token);
                     //SEND IT TO SERVER FOR UPDATION
@@ -91,9 +91,10 @@ navigator.serviceWorker.getRegistrations()
     })
 
 
-function displayConfirmNotification() {
+function displayConfirmNotification(var fro) {
     if ('serviceWorker' in navigator) {
         var options = {
+			title: fro,
             body: 'You successfully subscribed to our Notification service!',
             // icon: '/src/images/icons/app-icon-96x96.png',
             // image: '/src/images/sf-boat.jpg',
@@ -126,7 +127,7 @@ function displayConfirmNotification() {
 messaging.onMessage(function (payload) {
 	document.getElementById("payload").innerHTML = payload;
     console.log("Message received. ", payload);
-    displayConfirmNotification();
+    displayConfirmNotification("foreground noti");
     // [START_EXCLUDE]
     // Update the UI to include the received message.
     // appendMessage(payload);

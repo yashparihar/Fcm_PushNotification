@@ -156,6 +156,7 @@ var NOTIFICATION_DATA = "";
 
 self.addEventListener('push', function (event) {
     NOTIFICATION_DATA = event.data.json();
+	alert("show when push event at SW triggers");
 });
 
 // WHEN NOTIFICATION CLICKED

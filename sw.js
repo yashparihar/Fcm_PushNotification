@@ -3,8 +3,8 @@
 // importScripts('/src/js/idb.js');
 // importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v1';
-var CACHE_DYNAMIC_NAME = 'dynamic-v1';
+var CACHE_STATIC_NAME = 'static-v2';
+var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 var STATIC_FILES = [
     '/',
     '/index.html',
@@ -114,14 +114,15 @@ importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 
 
 // Initialize Firebase
-var config = {
-    apiKey: "AIzaSyBsU36aBbWpUqtRkB72PFfZmpBJG7bB8DM",
-    authDomain: "wager-61770.firebaseapp.com",
-    databaseURL: "https://wager-61770.firebaseio.com",
-    projectId: "wager-61770",
-    storageBucket: "wager-61770.appspot.com",
-    messagingSenderId: "626308378147"
-};
+  var config = {
+    apiKey: "AIzaSyB58t5cXI-9x_vcEI5Hyrz08LU7XF1mI3Q",
+    authDomain: "airy-scope-187507.firebaseapp.com",
+    databaseURL: "https://airy-scope-187507.firebaseio.com",
+    projectId: "airy-scope-187507",
+    storageBucket: "airy-scope-187507.appspot.com",
+    messagingSenderId: "490368607157"
+  };
+
 firebase.initializeApp(config);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
@@ -151,59 +152,40 @@ messaging.setBackgroundMessageHandler(function(payload) {
 
 
 
+var NOTIFICATION_DATA = "";
 
-self.addEventListener('push', function(event) {
-    console.log('Push Notification received', event);
+self.addEventListener('push', function (event) {
+    NOTIFICATION_DATA = event.data.json();
+});
 
-    if (event.data) {
-        data = JSON.parse(event.data.text());
-    }
-
-    var options = {
-        body: data.content,
-        icon: '/src/pic.png',
-        badge: '/src/pic.png',
-    };
+// WHEN NOTIFICATION CLICKED
+self.addEventListener('notificationclick', function (event) {
+    var notification = event.notification;
+    var p_url = NOTIFICATION_DATA.notification.click_action;
 
     event.waitUntil(
-        self.registration.showNotification(data.title, options)
+        clients.matchAll() //..CHECK BROWSER
+            .then(function (clis) {
+                var client = clis.find(function (c) {
+                    return c.visibilityState === 'visible';
+                });
+                try {
+                    if (client !== undefined) {
+                        client.navigate(p_url);
+                        client.focus();
+                    } else {
+                        clients.openWindow(p_url);
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+                notification.close();
+            })
     );
 });
 
 
-// WHEN NOTIFICATION CLICKED
-self.addEventListener('notificationclick', function(event) {
-    var notification = event.notification;
-    var action = event.action;
-
-    console.log(notification);
-
-    if (action === 'confirm') {
-        console.log('Confirm was chosen');
-        notification.close();
-    } else {
-        console.log(action);
-        event.waitUntil(
-            clients.matchAll()
-                .then(function(clis) {
-                    var client = clis.find(function(c) {
-                        return c.visibilityState === 'visible';
-                    });
-
-                    if (client !== undefined) {
-                        client.navigate(notification.data.url);
-                        client.focus();
-                    } else {
-                        clients.openWindow(notification.data.url);
-                    }
-                    notification.close();
-                })
-        );
-    }
-});
-
-
 //WHEN NOTIFICATION SWIPPED CLOSED
-self.addEventListener('notificationclose', function(event) {
+self.addEventListener('notificationclose', function (event) {
     console.log('Notification was closed', event);
 });

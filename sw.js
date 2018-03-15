@@ -119,12 +119,14 @@ var NOTIFICATION_DATA = "";
 
 self.addEventListener('push', function (event) {
     NOTIFICATION_DATA = event.data.json();
-	alert("show when push event at SW triggers");
+	//alert("show when push event at SW triggers");
 });
 
 // WHEN NOTIFICATION CLICKED
 self.addEventListener('notificationclick', function (event) {
     var notification = event.notification;
+	console.log("NOTIFICATION_DATA when push trigger");
+	console.log(NOTIFICATION_DATA);
     var p_url = NOTIFICATION_DATA.notification.click_action;
 
     event.waitUntil(

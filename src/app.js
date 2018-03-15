@@ -60,7 +60,7 @@ navigator.serviceWorker.getRegistrations()
         messaging.requestPermission()  //REQUESTING PERMISSION FOR SENDING NOTIFICATION
             .then(function () {
                 console.log("got permission");
-                displayConfirmNotification();
+                
 
                 return messaging.getToken();
             })
@@ -73,6 +73,7 @@ navigator.serviceWorker.getRegistrations()
                     console.log("similiar token"+myStorage.getItem('notification_token'));
 
                 } else {
+					displayConfirmNotification();
                     console.log("New token");
                     myStorage.setItem('notification_token', token);
                     //SEND IT TO SERVER FOR UPDATION

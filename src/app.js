@@ -13,14 +13,15 @@ if ("serviceWorker" in navigator) {
 
 
 // Initialize Firebase
-var config = {
-    apiKey: "AIzaSyBsU36aBbWpUqtRkB72PFfZmpBJG7bB8DM",
-    authDomain: "wager-61770.firebaseapp.com",
-    databaseURL: "https://wager-61770.firebaseio.com",
-    projectId: "wager-61770",
-    storageBucket: "wager-61770.appspot.com",
-    messagingSenderId: "626308378147"
-};
+  var config = {
+    apiKey: "AIzaSyB58t5cXI-9x_vcEI5Hyrz08LU7XF1mI3Q",
+    authDomain: "airy-scope-187507.firebaseapp.com",
+    databaseURL: "https://airy-scope-187507.firebaseio.com",
+    projectId: "airy-scope-187507",
+    storageBucket: "airy-scope-187507.appspot.com",
+    messagingSenderId: "490368607157"
+  };
+
 firebase.initializeApp(config);
 
 // Retrieve Firebase Messaging object.

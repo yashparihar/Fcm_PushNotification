@@ -1,16 +1,10 @@
-
-//
-// importScripts('/src/js/idb.js');
-// importScripts('/src/js/utility.js');
-
-var CACHE_STATIC_NAME = 'static-v4';
-var CACHE_DYNAMIC_NAME = 'dynamic-v4';
+var CACHE_STATIC_NAME = 'static-v5';
+var CACHE_DYNAMIC_NAME = 'dynamic-v5';
 var STATIC_FILES = [
     '/',
     '/index.html',
     '/src/main.css'
 ];
-
 
 self.addEventListener('install', function (event) {
     console.log('[Service Worker] Installing Service Worker ...', event);
@@ -102,16 +96,8 @@ self.addEventListener('fetch', function (event) {
 });
 
 
-//* Here is is the code snippet to initialize Firebase Messaging in the Service
-//* Worker when your app is not hosted on Firebase Hosting.
-// [START initialize_firebase_in_sw]
-// Give the service worker access to Firebase Messaging.
-// Note that you can only use Firebase Messaging here, other Firebase libraries
-// are not available in the service worker.
-
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
-
 
 // Initialize Firebase
   var config = {
@@ -122,35 +108,12 @@ importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
     storageBucket: "airy-scope-187507.appspot.com",
     messagingSenderId: "490368607157"
   };
-
 firebase.initializeApp(config);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
 const messaging = firebase.messaging();
 // [END initialize_firebase_in_sw]
-
-/*
-// If you would like to customize notifications that are received in the
-// background (Web app is closed or not in browser focus) then you should
-// implement this optional method.
-// [START background_handler]
-messaging.setBackgroundMessageHandler(function(payload) {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    // Customize notification here
-    const notificationTitle = 'Background Message Title';
-    const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/firebase-logo.png'
-    };
-
-    return self.registration.showNotification(notificationTitle,
-        notificationOptions);
-});
-*/
-// // [END background_handler
-
-
 
 var NOTIFICATION_DATA = "";
 

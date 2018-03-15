@@ -42,19 +42,14 @@ navigator.serviceWorker.getRegistrations()
         console.log(swreg);
         messaging.useServiceWorker(swreg[0]); //TELLING FIREBASE CLOUD MESSAGE TO USE THIS SERVICE WORKER
 
-        // Callback fired if Instance ID token is updated.
-        // messaging.onTokenRefresh(function () {
-        //     messaging.getToken()
-        //         .then(function (refreshedToken) {
-        //             console.log('Token refreshed.');
-        //             console.log(token);
-        //
-        //         })
-        //         .catch(function (err) {
-        //             console.log('Unable to retrieve refreshed token ', err);
-        //             showToken('Unable to retrieve refreshed token ', err);
-        //         });
-        // });
+         if (Notification.permission === "default") {
+                notification_permission_flg = false;
+            } else if (Notification.permission === "denied") {
+                //WHEN NOTIFICATION IS NOT ASKED AND TOKEN IS NOT THEIR..
+                myStorage.removeItem('notification_token');
+                return;
+            }
+
 
 
         messaging.requestPermission()  //REQUESTING PERMISSION FOR SENDING NOTIFICATION
@@ -73,10 +68,12 @@ navigator.serviceWorker.getRegistrations()
                     console.log("similiar token"+myStorage.getItem('notification_token'));
 
                 } else {
-					displayConfirmNotification("newSubs");
                     console.log("New token");
                     myStorage.setItem('notification_token', token);
                     //SEND IT TO SERVER FOR UPDATION
+					
+					 if (notification_permission_flg === false) //IF PERMISSION WAS ASKED
+						displayConfirmNotification("newly Subscribed");
                 }
                 //CHECK IF TOKEN ALREADY IN LOCAL MEMORY
                 //IF THIS TOKEN AND STORED TOKEN ARE SAME.. RETURN
@@ -94,7 +91,6 @@ navigator.serviceWorker.getRegistrations()
 function displayConfirmNotification(fro) {
     if ('serviceWorker' in navigator) {
         var options = {
-			title: fro,
             body: 'You successfully subscribed to our Notification service!',
             // icon: '/src/images/icons/app-icon-96x96.png',
             // image: '/src/images/sf-boat.jpg',
@@ -112,7 +108,7 @@ function displayConfirmNotification(fro) {
 
         navigator.serviceWorker.ready
             .then(function(swreg) {
-                swreg.showNotification('Successfully subscribed!', options);
+                swreg.showNotification(fro, options);
             });
     }
 }
@@ -127,7 +123,7 @@ function displayConfirmNotification(fro) {
 messaging.onMessage(function (payload) {
 	document.getElementById("payload").innerHTML = payload;
     console.log("Message received. ", payload);
-    displayConfirmNotification("foreground noti");
+    displayConfirmNotification("foreground notification");
     // [START_EXCLUDE]
     // Update the UI to include the received message.
     // appendMessage(payload);

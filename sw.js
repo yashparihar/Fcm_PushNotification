@@ -1,9 +1,14 @@
+importScripts('/src/idb.js');
+importScripts('/src/utility.js');
+/*
 var CACHE_STATIC_NAME = 'static-v5';
 var CACHE_DYNAMIC_NAME = 'dynamic-v5';
 var STATIC_FILES = [
     '/',
     '/index.html',
-    '/src/main.css'
+    '/src/main.css',
+    '/src/idb.js',
+    '/src/idb.js'
 ];
 
 self.addEventListener('install', function (event) {
@@ -53,7 +58,7 @@ self.addEventListener('fetch', function (event) {
             .then(function (res) {
                 var clonedRes = res.clone();
                 clonedRes.json()
-                    .then(function(data) {
+                    .then(function (data) {
                         // for (var key in data) {
                         //     writeData('posts', data[key]); //WRITING INTO INDEXED DB
                         // }
@@ -94,20 +99,20 @@ self.addEventListener('fetch', function (event) {
         );
     }
 });
-
+*/
 
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 
 // Initialize Firebase
-  var config = {
+var config = {
     apiKey: "AIzaSyB58t5cXI-9x_vcEI5Hyrz08LU7XF1mI3Q",
     authDomain: "airy-scope-187507.firebaseapp.com",
     databaseURL: "https://airy-scope-187507.firebaseio.com",
     projectId: "airy-scope-187507",
     storageBucket: "airy-scope-187507.appspot.com",
     messagingSenderId: "490368607157"
-  };
+};
 firebase.initializeApp(config);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
@@ -118,36 +123,62 @@ const messaging = firebase.messaging();
 var NOTIFICATION_DATA = "";
 
 self.addEventListener('push', function (event) {
+    console.log("[sw push event: ");
+
     NOTIFICATION_DATA = event.data.json();
-	//alert("show when push event at SW triggers");
+
+    var post = {
+        id: 121,
+        url: "http://127.0.0.1:8080/",
+        data: NOTIFICATION_DATA
+    };
+
+    writeData("actionurl", post)
+        .then(function () {
+            console.log("writed data success");
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+
+    //alert("show when push event at SW triggers");
 });
+
 
 // WHEN NOTIFICATION CLICKED
 self.addEventListener('notificationclick', function (event) {
     var notification = event.notification;
-	console.log("NOTIFICATION_DATA when push trigger");
-	console.log(NOTIFICATION_DATA);
-    var p_url = NOTIFICATION_DATA.notification.click_action;
 
     event.waitUntil(
-        clients.matchAll() //..CHECK BROWSER
-            .then(function (clis) {
-                var client = clis.find(function (c) {
-                    return c.visibilityState === 'visible';
-                });
-                try {
-                    if (client !== undefined) {
-                        client.navigate(p_url);
-                        client.focus();
-                    } else {
-                        clients.openWindow(p_url);
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-                notification.close();
+        readAllData('actionurl')
+            .then(function (data) {
+                var p_url = data[0].url;
+                clients.matchAll() //..CHECK BROWSER
+                    .then(function (clis) {
+                        var client = clis.find(function (c) {
+                            return c.visibilityState === 'visible';
+                        });
+                        try {
+                            if (client !== undefined) {
+                                client.navigate(p_url);
+                                client.focus();
+                            } else {
+                                clients.openWindow(p_url)
+                                    .then(function (value) { console.log(value); });
+                            }
+                        } catch (err) {
+                            console.log(err);
+                        }
+
+                    })
+            })
+            .catch(function (err) {
+                console.log(err);
+                //  openPage(event, p_url);
             })
     );
+    notification.close();
+
 });
 
 

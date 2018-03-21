@@ -129,7 +129,7 @@ self.addEventListener('push', function (event) {
 
     var post = {
         id: 121,
-        url: "http://127.0.0.1:8080/",
+        url: NOTIFICATION_DATA.click_action,
         data: NOTIFICATION_DATA
     };
 
@@ -141,6 +141,25 @@ self.addEventListener('push', function (event) {
             console.log(err);
         });
 
+		
+  var data = {title: 'New!', content: 'Something new happened!', openUrl: '/'};
+		
+  if (event.data) {
+    data = JSON.parse(event.data.text());
+	console.log(data);
+  }
+
+  var options = {
+    body: data.content,
+    data: {
+      url: data.openUrl
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+
     //alert("show when push event at SW triggers");
 });
 
@@ -148,6 +167,13 @@ self.addEventListener('push', function (event) {
 // WHEN NOTIFICATION CLICKED
 self.addEventListener('notificationclick', function (event) {
     var notification = event.notification;
+    console.log(notification);
+	
+	try{
+		console.log(notification.data);
+	} catch(err) {
+		console.log(err);
+	}
 
     event.waitUntil(
         readAllData('actionurl')
@@ -160,11 +186,11 @@ self.addEventListener('notificationclick', function (event) {
                         });
                         try {
                             if (client !== undefined) {
-                                client.navigate(p_url);
-                                client.focus();
+                          //      client.navigate(p_url);
+                          //      client.focus();
                             } else {
-                                clients.openWindow(p_url)
-                                    .then(function (value) { console.log(value); });
+                           //     clients.openWindow(p_url)
+                            //        .then(function (value) { console.log(value); });
                             }
                         } catch (err) {
                             console.log(err);

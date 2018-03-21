@@ -35,10 +35,10 @@ const messaging = firebase.messaging();
 //document.getElementById("messaging").innerHTML = messaging;
 
 //PUSH IN FOREGROUND WHEN APP IS OPEN
-self.addEventListener('push', function (event) {
-    alert("Push notification at foreground:");
-    console.log(event);
-});
+// swRegistration.addEventListener('push', function (event) {
+//     alert("Push notification at foreground:");
+//     console.log(event);
+// });
 
 
 //REGISTER FIREBASE MESSAGING SERVICE WITH EXISTING SERVICE WORKER
@@ -95,27 +95,19 @@ navigator.serviceWorker.ready
             })
     })
 
-function displayConfirmNotification(fro) {
+function displayConfirmNotification( noti) {
     if ('serviceWorker' in navigator) {
+
         var options = {
-            body: 'You successfully subscribed to our Notification service!',
-            // icon: '/src/images/icons/app-icon-96x96.png',
-            // image: '/src/images/sf-boat.jpg',
-            dir: 'ltr',
-            lang: 'en-US', // BCP 47,
-            vibrate: [100, 50, 200],
-            //    badge: '/src/images/icons/app-icon-96x96.png',
-            tag: 'confirm-notification',
-            renotify: true,
-            actions: [
-                {action: 'confirm', title: 'Okay', icon: 'src/pic.png'},
-                {action: 'cancel', title: 'Cancel', icon: 'src/pic.png'}
-            ]
+            body: noti.body,
+            click_action: noti.click_action
         };
+
+        console.log(options);
 
         navigator.serviceWorker.ready
             .then(function (swreg) {
-                swreg.showNotification(fro, options);
+                swreg.showNotification(noti.title, options);
             });
     }
 }
@@ -128,7 +120,8 @@ function displayConfirmNotification(fro) {
 //   `messaging.setBackgroundMessageHandler` handler.
 messaging.onMessage(function (payload) {
     document.getElementById("payload").innerHTML = payload;
-
+  console.log(payload.notification);
+    /*
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready
             .then(function (sw) { //access to SW
@@ -147,9 +140,8 @@ messaging.onMessage(function (payload) {
                     });
             })
     }
-
+*/
     //writeData('actionurl', JSON.stringify({"key":"value"}) );
-    displayConfirmNotification("foreground notification");
+    displayConfirmNotification( payload.notification);
 
 });
-// [END receive_messag
